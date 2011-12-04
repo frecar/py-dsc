@@ -10,7 +10,7 @@ def free_space(folder):
         return free_bytes.value
     else:
 	folder_stat = os.statvfs(folder)
-        return (folder_stat.f_bavail*folder_stat.f_frsize) / (1024*1024*1024)
+        return (folder_stat.f_bavail*folder_stat.f_frsize)
 
 def walk_flat_file(top, callback):
 	for f in os.listdir(top):
