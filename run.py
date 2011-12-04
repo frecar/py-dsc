@@ -9,6 +9,7 @@ def free_space(folder):
         ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(folder), None, None, ctypes.pointer(free_bytes))
         return free_bytes.value
     else:
+		
         return os.statvfs(folder).f_bfree
 
 def walk_flat_file(top, callback):
