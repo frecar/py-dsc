@@ -43,16 +43,19 @@ def enough_free_space(root_path, required_bytes):
 
 def main(media_path, required_bytes):
 	if not enough_free_space(media_path, required_bytes):
-		print "ja"
 		heap = build_heap(media_path)
+		logg = open("DELETE_LOG.txt", "a")
+		logg.write("\n\n")
+		logg.write("Need more space, commencing search at " + time.ctime() + "\n")
 		while not enough_free_space(media_path, required_bytes) and len(heap) > 0:
-			print "deleting " + str(heap[0][1]) + " with " + str(free_space(media_path)) + " bytes of free space."
+			print "deleting " + str(heap[0][1]) 
 			delete_thing(heappop(heap)[1])
+			logg.write("Deleting " + str(heap[0][1]) + ", thereby gaining " + str(free_space(media_path)) + " bytes of free space.\n")
+		if enough_free_space(media_path, required_bytes):
+			logg.write("Finished with enough free space.")
+		else:
+			logg.write("Didn't free up as much as desired")
+		logg.close()
 	
 if __name__ == '__main__':
 	main(sys.argv[1], int(sys.argv[2]))
-	if enough_free_space(sys.argv[1], int(sys.argv[2])):
-		print "finished with enough free space"
-	else:
-		print "didnt free up as much as desired"
-	
