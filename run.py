@@ -2,9 +2,12 @@ import os, sys, time, platform, ctypes, shutil
 from stat import *
 from heapq import *
 
+def dummy():
+	pass
+
+
 def free_space(folder):
-    """ Return folder/drive free space (in bytes)
-    """
+    # Return folder/drive free space (in bytes)
     if platform.system() == 'Windows':
         free_bytes = ctypes.c_ulonglong(0)
         ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(folder), None, None, ctypes.pointer(free_bytes))
