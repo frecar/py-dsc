@@ -2,10 +2,6 @@ import os, sys, time, platform, ctypes, shutil
 from stat import *
 from heapq import *
 
-def dummy():
-	pass
-
-
 def free_space(folder):
     # Return folder/drive free space (in bytes)
     if platform.system() == 'Windows':
