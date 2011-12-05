@@ -3,7 +3,7 @@ from stat import *
 from heapq import *
 
 def add_file_to_unrared_list(filename):
-    f = open("UNRARED_LOG.txt", "a")
+    f = open("UNRARED_FILES.txt", "a")
 
     if len(str(filename).strip()):
         f.write(time.ctime() + " ")
@@ -15,7 +15,7 @@ def add_file_to_unrared_list(filename):
 
 def filename_in_unrared_files(filename):
     try:
-        f = open("UNRARED_LOG.txt", "r")
+        f = open("UNRARED_FILES.txt", "r")
         result = filename in f.read()
         f.close()
         return result
@@ -68,7 +68,6 @@ def build_heap(root_path):
         heappush(heap, (creation_time(path), path))
     return heap
 
-
 def is_directory(path):
     return S_ISDIR(os.stat(path)[ST_MODE])
 
@@ -86,23 +85,27 @@ def enough_free_space(root_path, required_bytes):
 
 def main(media_path, required_gigabytes):
 
-    required_bytes = required_gigabytes * 1024 * 1024 * 1024
+    required_bytes = int(required_gigabytes) * (1000*1000*1000)
+
+    logg = open("DELETE_LOG.txt", "a")
 
     if not enough_free_space(media_path, required_bytes):
         heap = build_heap(media_path)
-        logg = open("DELETE_LOG.txt", "a")
         logg.write("\n\n")
         logg.write(time.ctime() + " Need more space, commencing search \n")
         while not enough_free_space(media_path, required_bytes) and len(heap) > 0:
-            print "deleting " + str(heap[0][1])
+            logg.write(time.ctime() + " Deleting " + str(heap[0][1]) + ", thereby gaining " + str(free_space(media_path)) + " bytes of free space.\n")
             delete_thing(heappop(heap)[1])
-            logg.write(time.ctime() + " Deleting " + str(heap[0][1]) + ", thereby gaining " + str(
-                free_space(media_path)) + " bytes of free space.\n")
         if enough_free_space(media_path, required_bytes):
-            logg.write(time.ctime() + "Finished with enough free space.")
+            logg.write(time.ctime() + " Finished with enough free space.\n")
         else:
-            logg.write(time.ctime() + "Didn't free up as much as desired")
-        logg.close()
+            logg.write(time.ctime() + " Didn't free up as much as desired \n")
+
+    logg.close()
 
     for rar_file in find_rar_files(media_path):
-        os.system("open " + rar_file)
+        os.system("open '" + rar_file + "'")
+
+if __name__ == '__main__':
+    main(sys.argv[1], sys.argv[2])
+    
