@@ -2,8 +2,12 @@ import os, sys, time, platform, ctypes, shutil
 from stat import *
 from heapq import *
 
+BASE_PATH = os.path.dirname(__file__)
+if BASE_PATH:
+    BASE_PATH+="/"
+
 def add_file_to_unrared_list(filename):
-    f = open("UNRARED_FILES.txt", "a")
+    f = open(BASE_PATH+"UNRARED_FILES.txt", "a")
 
     if len(str(filename).strip()):
         f.write(time.ctime() + " ")
@@ -15,7 +19,7 @@ def add_file_to_unrared_list(filename):
 
 def filename_in_unrared_files(filename):
     try:
-        f = open("UNRARED_FILES.txt", "r")
+        f = open(BASE_PATH+"UNRARED_FILES.txt", "r")
         result = filename in f.read()
         f.close()
         return result
@@ -87,7 +91,7 @@ def main(media_path, required_gigabytes):
 
     required_bytes = int(required_gigabytes) * (1000*1000*1000)
 
-    logg = open("DELETE_LOG.txt", "a")
+    logg = open(BASE_PATH+"DELETE_LOG.txt", "a")
 
     if not enough_free_space(media_path, required_bytes):
         heap = build_heap(media_path)
